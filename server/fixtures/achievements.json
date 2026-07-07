@@ -1,0 +1,62 @@
+[
+  {
+    "id": "ach_01", "name": "First Steps", "description": "Complete your first focus session",
+    "icon": "footsteps", "studentId": "stu_01", "unlockedAt": "2026-05-15T10:30:00.000Z",
+    "progress": 100, "target": 1, "current": 1
+  },
+  {
+    "id": "ach_02", "name": "Week Warrior", "description": "Complete 10 sessions in a single week",
+    "icon": "shield", "studentId": "stu_01", "unlockedAt": "2026-06-20T14:00:00.000Z",
+    "progress": 100, "target": 10, "current": 10
+  },
+  {
+    "id": "ach_03", "name": "Coin Starter", "description": "Earn your first 100 coins",
+    "icon": "cash", "studentId": "stu_01", "unlockedAt": "2026-05-28T09:00:00.000Z",
+    "progress": 100, "target": 100, "current": 100
+  },
+  {
+    "id": "ach_04", "name": "Focus Master", "description": "Complete 10 Deep Focus sessions",
+    "icon": "flame", "studentId": "stu_01", "unlockedAt": "2026-06-25T16:00:00.000Z",
+    "progress": 100, "target": 10, "current": 10
+  },
+  {
+    "id": "ach_05", "name": "Early Bird", "description": "Complete 5 sessions before 9 AM",
+    "icon": "sunny", "studentId": "stu_01", "unlockedAt": "2026-07-03T08:45:00.000Z",
+    "progress": 100, "target": 5, "current": 5
+  },
+  {
+    "id": "ach_06", "name": "Streak Legend", "description": "Maintain a 30-day streak",
+    "icon": "bonfire", "studentId": "stu_01", "unlockedAt": null,
+    "progress": 17, "target": 30, "current": 5
+  },
+  {
+    "id": "ach_07", "name": "Coin Collector", "description": "Earn 1000 coins total",
+    "icon": "wallet", "studentId": "stu_01", "unlockedAt": null,
+    "progress": 34, "target": 1000, "current": 340
+  },
+  {
+    "id": "ach_08", "name": "Marathon", "description": "Complete 50 focus sessions",
+    "icon": "trophy", "studentId": "stu_01", "unlockedAt": null,
+    "progress": 48, "target": 50, "current": 24
+  },
+  {
+    "id": "ach_09", "name": "Night Owl", "description": "Complete 5 sessions after 9 PM",
+    "icon": "moon", "studentId": "stu_01", "unlockedAt": null,
+    "progress": 20, "target": 5, "current": 1
+  },
+  {
+    "id": "ach_10", "name": "Perfectionist", "description": "Hit your daily goal 7 days straight",
+    "icon": "checkmark-done", "studentId": "stu_01", "unlockedAt": null,
+    "progress": 29, "target": 7, "current": 2
+  },
+  {
+    "id": "ach_11", "name": "Social Star", "description": "Invite 3 friends to Alcovia",
+    "icon": "people", "studentId": "stu_01", "unlockedAt": null,
+    "progress": 0, "target": 3, "current": 0
+  },
+  {
+    "id": "ach_12", "name": "Legend", "description": "Unlock all other achievements",
+    "icon": "diamond", "studentId": "stu_01", "unlockedAt": null,
+    "progress": 45, "target": 11, "current": 5
+  }
+]

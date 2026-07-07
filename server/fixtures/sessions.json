@@ -1,0 +1,104 @@
+[
+  {
+    "id": "ses_01", "studentId": "stu_01", "type": "deep_focus", "durationMs": 1500000, "coins": 50, "status": "completed",
+    "startedAt": 1720356600000, "completedAt": 1720358100000,
+    "timeline": [
+      { "type": "focus", "durationMs": 1500000, "startedAt": "2026-07-07T09:00:00.000Z" }
+    ]
+  },
+  {
+    "id": "ses_02", "studentId": "stu_01", "type": "quick_sprint", "durationMs": 900000, "coins": 30, "status": "completed",
+    "startedAt": 1720344000000, "completedAt": 1720344900000,
+    "timeline": [
+      { "type": "focus", "durationMs": 900000, "startedAt": "2026-07-07T05:30:00.000Z" }
+    ]
+  },
+  {
+    "id": "ses_03", "studentId": "stu_01", "type": "deep_focus", "durationMs": 1500000, "coins": 50, "status": "completed",
+    "startedAt": 1720278900000, "completedAt": 1720280400000,
+    "timeline": [
+      { "type": "focus", "durationMs": 750000, "startedAt": "2026-07-06T10:45:00.000Z" },
+      { "type": "break", "durationMs": 300000, "startedAt": "2026-07-06T10:57:30.000Z" },
+      { "type": "focus", "durationMs": 450000, "startedAt": "2026-07-06T11:02:30.000Z" }
+    ]
+  },
+  {
+    "id": "ses_04", "studentId": "stu_01", "type": "pomodoro", "durationMs": 1500000, "coins": 50, "status": "completed",
+    "startedAt": 1720258200000, "completedAt": 1720259700000,
+    "timeline": [
+      { "type": "focus", "durationMs": 1500000, "startedAt": "2026-07-06T05:00:00.000Z" }
+    ]
+  },
+  {
+    "id": "ses_05", "studentId": "stu_01", "type": "quick_sprint", "durationMs": 900000, "coins": 30, "status": "completed",
+    "startedAt": 1720195200000, "completedAt": 1720196100000,
+    "timeline": [
+      { "type": "focus", "durationMs": 900000, "startedAt": "2026-07-05T11:30:00.000Z" }
+    ]
+  },
+  {
+    "id": "ses_06", "studentId": "stu_01", "type": "deep_focus", "durationMs": 1500000, "coins": 50, "status": "completed",
+    "startedAt": 1720180800000, "completedAt": 1720182300000,
+    "timeline": [
+      { "type": "focus", "durationMs": 1500000, "startedAt": "2026-07-05T07:30:00.000Z" }
+    ]
+  },
+  {
+    "id": "ses_07", "studentId": "stu_01", "type": "deep_focus", "durationMs": 1500000, "coins": 50, "status": "completed",
+    "startedAt": 1720108800000, "completedAt": 1720110300000,
+    "timeline": [
+      { "type": "focus", "durationMs": 750000, "startedAt": "2026-07-04T11:30:00.000Z" },
+      { "type": "break", "durationMs": 300000, "startedAt": "2026-07-04T11:42:30.000Z" },
+      { "type": "focus", "durationMs": 450000, "startedAt": "2026-07-04T11:47:30.000Z" }
+    ]
+  },
+  {
+    "id": "ses_08", "studentId": "stu_01", "type": "pomodoro", "durationMs": 1500000, "coins": 50, "status": "completed",
+    "startedAt": 1720094400000, "completedAt": 1720095900000,
+    "timeline": [
+      { "type": "focus", "durationMs": 1500000, "startedAt": "2026-07-04T07:30:00.000Z" }
+    ]
+  },
+  {
+    "id": "ses_09", "studentId": "stu_01", "type": "quick_sprint", "durationMs": 900000, "coins": 30, "status": "completed",
+    "startedAt": 1720011600000, "completedAt": 1720012500000,
+    "timeline": [
+      { "type": "focus", "durationMs": 900000, "startedAt": "2026-07-03T08:30:00.000Z" }
+    ]
+  },
+  {
+    "id": "ses_10", "studentId": "stu_01", "type": "deep_focus", "durationMs": 1500000, "coins": 50, "status": "completed",
+    "startedAt": 1719936000000, "completedAt": 1719937500000,
+    "timeline": [
+      { "type": "focus", "durationMs": 1500000, "startedAt": "2026-07-02T11:30:00.000Z" }
+    ]
+  },
+  {
+    "id": "ses_11", "studentId": "stu_01", "type": "deep_focus", "durationMs": 1500000, "coins": 50, "status": "completed",
+    "startedAt": 1719921600000, "completedAt": 1719923100000,
+    "timeline": [
+      { "type": "focus", "durationMs": 1500000, "startedAt": "2026-07-02T07:30:00.000Z" }
+    ]
+  },
+  {
+    "id": "ses_12", "studentId": "stu_01", "type": "deep_focus", "durationMs": 1500000, "coins": 50, "status": "abandoned",
+    "startedAt": 1719849600000, "completedAt": null,
+    "timeline": [
+      { "type": "focus", "durationMs": 600000, "startedAt": "2026-07-01T11:30:00.000Z" }
+    ]
+  },
+  {
+    "id": "ses_13", "studentId": "stu_01", "type": "quick_sprint", "durationMs": 900000, "coins": 30, "status": "completed",
+    "startedAt": 1719835200000, "completedAt": 1719836100000,
+    "timeline": [
+      { "type": "focus", "durationMs": 900000, "startedAt": "2026-07-01T07:30:00.000Z" }
+    ]
+  },
+  {
+    "id": "ses_14", "studentId": "stu_01", "type": "pomodoro", "durationMs": 1500000, "coins": 50, "status": "completed",
+    "startedAt": 1719828000000, "completedAt": 1719829500000,
+    "timeline": [
+      { "type": "focus", "durationMs": 1500000, "startedAt": "2026-07-01T05:30:00.000Z" }
+    ]
+  }
+]

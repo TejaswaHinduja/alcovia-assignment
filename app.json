@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "Alcovia Student",
+    "slug": "alcovia-student",
+    "version": "1.0.0",
+    "scheme": "alcovia",
+    "platforms": ["ios", "android"],
+    "newArchEnabled": true,
+    "plugins": ["expo-router", "expo-font"]
+  }
+}

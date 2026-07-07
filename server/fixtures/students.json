@@ -1,0 +1,11 @@
+[
+  {
+    "id": "stu_01",
+    "name": "Arjun Mehta",
+    "initials": "AM",
+    "totalCoins": 340,
+    "currentStreak": 5,
+    "dailyGoal": 3,
+    "joinedAt": "2026-05-15T10:00:00.000Z"
+  }
+]

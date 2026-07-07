@@ -1,0 +1,1231 @@
+<title>Alcovia — Design Spec</title>
+<style>
+:root {
+  --doc-bg: #FAFAFD;
+  --doc-surface: #FFFFFF;
+  --doc-surface-2: #F3F1FA;
+  --doc-text: #1A1726;
+  --doc-text-2: #6B6580;
+  --doc-accent: #6C5CE7;
+  --doc-accent-soft: #EDE9FE;
+  --doc-border: #E0DCF0;
+  --doc-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+  --doc-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --doc-radius: 12px;
+
+  --app-bg: #F5F6FA;
+  --app-surface: #FFFFFF;
+  --app-primary: #6C5CE7;
+  --app-primary-light: #EDE9FE;
+  --app-success: #00B894;
+  --app-success-light: #D1FAE5;
+  --app-amber: #F39C12;
+  --app-amber-light: #FEF3C7;
+  --app-text: #1A1D26;
+  --app-text-2: #6B7280;
+  --app-text-3: #9CA3AF;
+  --app-border: #E5E7EB;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --doc-bg: #0D0B14;
+    --doc-surface: #1A1726;
+    --doc-surface-2: #231F30;
+    --doc-text: #E8E5F0;
+    --doc-text-2: #A09AB0;
+    --doc-accent: #A29BFE;
+    --doc-accent-soft: #2D2654;
+    --doc-border: #2D2840;
+  }
+}
+:root[data-theme="dark"] {
+  --doc-bg: #0D0B14;
+  --doc-surface: #1A1726;
+  --doc-surface-2: #231F30;
+  --doc-text: #E8E5F0;
+  --doc-text-2: #A09AB0;
+  --doc-accent: #A29BFE;
+  --doc-accent-soft: #2D2654;
+  --doc-border: #2D2840;
+}
+:root[data-theme="light"] {
+  --doc-bg: #FAFAFD;
+  --doc-surface: #FFFFFF;
+  --doc-surface-2: #F3F1FA;
+  --doc-text: #1A1726;
+  --doc-text-2: #6B6580;
+  --doc-accent: #6C5CE7;
+  --doc-accent-soft: #EDE9FE;
+  --doc-border: #E0DCF0;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--doc-bg);
+  color: var(--doc-text);
+  font-family: var(--doc-sans);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+/* ---- Header ---- */
+.header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.header-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--doc-accent);
+  margin-bottom: 12px;
+}
+.header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 8px;
+  text-wrap: balance;
+}
+.header p {
+  font-size: 15px;
+  color: var(--doc-text-2);
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* ---- Sections ---- */
+.section {
+  margin-bottom: 64px;
+}
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--doc-accent);
+  margin-bottom: 8px;
+}
+.section h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+.section .section-desc {
+  font-size: 14px;
+  color: var(--doc-text-2);
+  margin-bottom: 28px;
+}
+
+/* ---- Spec badges ---- */
+.spec-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+.spec-badge.full {
+  background: #D1FAE5;
+  color: #065F46;
+}
+.spec-badge.partial {
+  background: #FEF3C7;
+  color: #92400E;
+}
+.spec-badge.wireframe {
+  background: var(--doc-surface-2);
+  color: var(--doc-text-2);
+}
+
+/* ---- Token grid ---- */
+.token-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.token-card {
+  background: var(--doc-surface);
+  border: 1px solid var(--doc-border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.token-swatch {
+  height: 56px;
+  width: 100%;
+}
+.token-info {
+  padding: 10px 12px;
+}
+.token-name {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.token-value {
+  font-family: var(--doc-mono);
+  font-size: 12px;
+  color: var(--doc-text-2);
+}
+.token-usage {
+  font-size: 11px;
+  color: var(--doc-text-2);
+  margin-top: 4px;
+}
+
+/* ---- Type scale ---- */
+.type-row {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--doc-border);
+}
+.type-row:last-child { border-bottom: none; }
+.type-meta {
+  flex-shrink: 0;
+  width: 110px;
+  font-family: var(--doc-mono);
+  font-size: 11px;
+  color: var(--doc-text-2);
+}
+.type-sample {
+  font-family: var(--doc-sans);
+  color: var(--doc-text);
+}
+
+/* ---- Spacing reference ---- */
+.spacing-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+.spacing-bar {
+  height: 12px;
+  background: var(--doc-accent-soft);
+  border-radius: 3px;
+  border: 1px solid var(--doc-accent);
+  opacity: 0.6;
+}
+.spacing-label {
+  font-family: var(--doc-mono);
+  font-size: 12px;
+  color: var(--doc-text-2);
+  white-space: nowrap;
+}
+
+/* ---- Phone frame ---- */
+.phone-container {
+  display: flex;
+  justify-content: center;
+  margin: 24px 0 32px;
+}
+.phone {
+  width: 375px;
+  min-height: 780px;
+  background: #000;
+  border-radius: 44px;
+  padding: 12px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06);
+  position: relative;
+  flex-shrink: 0;
+}
+.phone-screen {
+  width: 100%;
+  height: 100%;
+  min-height: 756px;
+  background: var(--app-bg);
+  border-radius: 34px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.phone-island {
+  width: 120px;
+  height: 28px;
+  background: #000;
+  border-radius: 14px;
+  margin: 8px auto 0;
+  position: relative;
+  z-index: 2;
+}
+
+/* ---- Status bar ---- */
+.phone .status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 24px 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--app-text);
+  flex-shrink: 0;
+}
+.status-right {
+  display: flex;
+  gap: 6px;
+  font-size: 12px;
+  align-items: center;
+}
+.status-battery {
+  width: 22px;
+  height: 11px;
+  border: 1.5px solid var(--app-text);
+  border-radius: 3px;
+  position: relative;
+}
+.status-battery::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px; right: 2px; bottom: 2px;
+  background: var(--app-text);
+  border-radius: 1px;
+}
+.status-battery::before {
+  content: '';
+  position: absolute;
+  right: -4px; top: 2.5px;
+  width: 2px; height: 5px;
+  background: var(--app-text);
+  border-radius: 0 1px 1px 0;
+}
+
+/* ---- Tab bar ---- */
+.phone .tab-bar {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  padding: 8px 0 24px;
+  background: var(--app-surface);
+  border-top: 1px solid var(--app-border);
+  flex-shrink: 0;
+}
+.phone .tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--app-text-3);
+}
+.phone .tab-item.active { color: var(--app-primary); }
+.phone .tab-icon {
+  width: 22px;
+  height: 22px;
+}
+
+/* ---- App content area ---- */
+.phone .app-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 20px 16px;
+}
+
+/* ---- Dashboard mockup ---- */
+.app-greeting {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-top: 4px;
+}
+.app-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--app-primary-light);
+  color: var(--app-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.app-greeting-text h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--app-text);
+}
+.app-greeting-text p {
+  font-size: 13px;
+  color: var(--app-text-2);
+  margin: 0;
+}
+
+.app-stats-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.app-stat-card {
+  flex: 1;
+  padding: 14px 12px;
+  border-radius: 14px;
+  position: relative;
+}
+.app-stat-card.purple {
+  background: var(--app-primary-light);
+}
+.app-stat-card.green {
+  background: var(--app-success-light);
+}
+.app-stat-card.amber {
+  background: var(--app-amber-light);
+}
+.app-stat-icon {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+.app-stat-number {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--app-text);
+  font-variant-numeric: tabular-nums;
+}
+.app-stat-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--app-text-2);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.app-section-head {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 14px;
+  color: var(--app-text);
+}
+
+/* Bar chart */
+.app-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 120px;
+  padding: 0 4px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--app-border);
+  padding-bottom: 28px;
+  position: relative;
+}
+.app-chart-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+  justify-content: flex-end;
+}
+.app-chart-bar {
+  width: 100%;
+  max-width: 36px;
+  border-radius: 6px 6px 0 0;
+  background: var(--app-primary-light);
+  transition: height 0.3s;
+}
+.app-chart-bar.today {
+  background: var(--app-primary);
+}
+.app-chart-day {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--app-text-3);
+  position: absolute;
+  bottom: 6px;
+}
+.app-chart-col:nth-child(1) .app-chart-day { color: var(--app-text-2); }
+.app-chart-col:nth-child(6) .app-chart-day { color: var(--app-primary); font-weight: 700; }
+
+/* Progress card */
+.app-progress-card {
+  background: var(--app-surface);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.app-progress-ring {
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+}
+.app-progress-text h4 {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 4px;
+  color: var(--app-text);
+}
+.app-progress-text p {
+  font-size: 13px;
+  color: var(--app-text-2);
+  margin: 0;
+}
+
+/* CTA button */
+.app-cta {
+  width: 100%;
+  padding: 16px;
+  background: var(--app-primary);
+  color: #FFF;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(108, 92, 231, 0.35);
+  margin-bottom: 4px;
+  font-family: var(--doc-sans);
+  letter-spacing: 0.2px;
+}
+
+/* ---- History mockup ---- */
+.app-filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding-top: 4px;
+  overflow-x: auto;
+}
+.app-filter-pill {
+  padding: 7px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  background: var(--app-surface);
+  color: var(--app-text-2);
+  border: 1px solid var(--app-border);
+}
+.app-filter-pill.active {
+  background: var(--app-primary);
+  color: #FFF;
+  border-color: var(--app-primary);
+}
+
+.app-session-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--app-surface);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.app-session-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.app-session-icon.deep { background: var(--app-primary-light); }
+.app-session-icon.quick { background: var(--app-success-light); }
+.app-session-icon.pomo { background: var(--app-amber-light); }
+.app-session-info { flex: 1; min-width: 0; }
+.app-session-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--app-text);
+  margin-bottom: 2px;
+}
+.app-session-meta {
+  font-size: 12px;
+  color: var(--app-text-3);
+}
+.app-session-coins {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--app-success);
+  white-space: nowrap;
+}
+
+/* ---- Wireframe styles ---- */
+.wf-block {
+  border: 2px dashed var(--app-border);
+  border-radius: 14px;
+  padding: 20px 16px;
+  margin-bottom: 12px;
+  text-align: center;
+  color: var(--app-text-3);
+  font-size: 13px;
+  font-weight: 500;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(0,0,0,0.015) 10px,
+    rgba(0,0,0,0.015) 20px
+  );
+}
+.wf-block.tall { min-height: 200px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px; }
+.wf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.wf-badge {
+  border: 2px dashed var(--app-border);
+  border-radius: 14px;
+  padding: 24px 8px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--app-text-3);
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(0,0,0,0.015) 10px,
+    rgba(0,0,0,0.015) 20px
+  );
+}
+
+/* ---- Annotations ---- */
+.annotations {
+  background: var(--doc-surface);
+  border: 1px solid var(--doc-border);
+  border-radius: var(--doc-radius);
+  padding: 20px 24px;
+  margin-top: 8px;
+}
+.annotations h4 {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--doc-accent);
+  margin: 0 0 12px;
+}
+.anno-row {
+  display: flex;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--doc-border);
+  font-size: 13px;
+}
+.anno-row:last-child { border-bottom: none; }
+.anno-prop {
+  font-weight: 600;
+  color: var(--doc-text);
+  min-width: 140px;
+  flex-shrink: 0;
+}
+.anno-val {
+  font-family: var(--doc-mono);
+  font-size: 12px;
+  color: var(--doc-text-2);
+}
+
+/* ---- Your Call box ---- */
+.your-call {
+  background: #FEF3C7;
+  border: 1px solid #F59E0B;
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin: 16px 0;
+  font-size: 13px;
+  color: #92400E;
+}
+.your-call strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+/* ---- Component ref ---- */
+.comp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+.comp-card {
+  background: var(--doc-surface);
+  border: 1px solid var(--doc-border);
+  border-radius: var(--doc-radius);
+  padding: 20px;
+}
+.comp-card h4 {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  color: var(--doc-text-2);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+.comp-sample {
+  margin-bottom: 8px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 480px) {
+  .phone {
+    width: 100%;
+    border-radius: 0;
+    padding: 0;
+  }
+  .phone-screen { border-radius: 0; }
+  .page { padding: 24px 12px 60px; }
+  .token-grid { grid-template-columns: 1fr 1fr; }
+  .anno-row { flex-direction: column; gap: 2px; }
+}
+</style>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-eyebrow">Intern Assignment</div>
+    <h1>Alcovia Student App</h1>
+    <p>Design specification for 3 screens. Each screen has a different spec level. Read the badges carefully before building.</p>
+  </div>
+
+  <!-- DESIGN SYSTEM -->
+  <div class="section" id="tokens">
+    <div class="section-label">Design System</div>
+    <h2>Tokens</h2>
+    <p class="section-desc">Use these exact values. The starter repo exports them in <code style="font-family:var(--doc-mono);font-size:12px;background:var(--doc-surface-2);padding:2px 6px;border-radius:4px;">constants/Colors.ts</code>.</p>
+
+    <h3 style="font-size:14px;font-weight:700;margin:0 0 12px;color:var(--doc-text-2);">Colors</h3>
+    <div class="token-grid">
+      <div class="token-card">
+        <div class="token-swatch" style="background:#6C5CE7"></div>
+        <div class="token-info">
+          <div class="token-name">Primary</div>
+          <div class="token-value">#6C5CE7</div>
+          <div class="token-usage">Buttons, active tabs, accents</div>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#EDE9FE"></div>
+        <div class="token-info">
+          <div class="token-name">Primary Light</div>
+          <div class="token-value">#EDE9FE</div>
+          <div class="token-usage">Card tints, icon backgrounds</div>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#00B894"></div>
+        <div class="token-info">
+          <div class="token-name">Success</div>
+          <div class="token-value">#00B894</div>
+          <div class="token-usage">Coins, positive values</div>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#D1FAE5"></div>
+        <div class="token-info">
+          <div class="token-name">Success Light</div>
+          <div class="token-value">#D1FAE5</div>
+          <div class="token-usage">Success card tint</div>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#F39C12"></div>
+        <div class="token-info">
+          <div class="token-name">Amber</div>
+          <div class="token-value">#F39C12</div>
+          <div class="token-usage">Streaks, warnings</div>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#FEF3C7"></div>
+        <div class="token-info">
+          <div class="token-name">Amber Light</div>
+          <div class="token-value">#FEF3C7</div>
+          <div class="token-usage">Amber card tint</div>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#F5F6FA"></div>
+        <div class="token-info">
+          <div class="token-name">Background</div>
+          <div class="token-value">#F5F6FA</div>
+          <div class="token-usage">Screen background</div>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#1A1D26"></div>
+        <div class="token-info">
+          <div class="token-name">Text</div>
+          <div class="token-value">#1A1D26</div>
+          <div class="token-usage">Primary text, headings</div>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#6B7280"></div>
+        <div class="token-info">
+          <div class="token-name">Text Secondary</div>
+          <div class="token-value">#6B7280</div>
+          <div class="token-usage">Subtitles, metadata</div>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#9CA3AF"></div>
+        <div class="token-info">
+          <div class="token-name">Text Tertiary</div>
+          <div class="token-value">#9CA3AF</div>
+          <div class="token-usage">Placeholders, inactive tabs</div>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#FFFFFF;border-bottom:1px solid #E5E7EB"></div>
+        <div class="token-info">
+          <div class="token-name">Surface</div>
+          <div class="token-value">#FFFFFF</div>
+          <div class="token-usage">Cards, tab bar</div>
+        </div>
+      </div>
+      <div class="token-card">
+        <div class="token-swatch" style="background:#E5E7EB"></div>
+        <div class="token-info">
+          <div class="token-name">Border</div>
+          <div class="token-value">#E5E7EB</div>
+          <div class="token-usage">Dividers, card borders</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="font-size:14px;font-weight:700;margin:24px 0 12px;color:var(--doc-text-2);">Typography</h3>
+    <p style="font-size:13px;color:var(--doc-text-2);margin-bottom:16px;">Font family: <strong>Inter</strong> (use <code style="font-family:var(--doc-mono);font-size:12px;background:var(--doc-surface-2);padding:2px 6px;border-radius:4px;">@expo-google-fonts/inter</code>). All sizes below are in CSS px, which map 1:1 to React Native points.</p>
+    <div style="background:var(--doc-surface);border:1px solid var(--doc-border);border-radius:var(--doc-radius);padding:4px 20px;">
+      <div class="type-row">
+        <div class="type-meta">24 / Bold</div>
+        <div class="type-sample" style="font-size:24px;font-weight:700;">Hey, Arjun</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">22 / Bold</div>
+        <div class="type-sample" style="font-size:22px;font-weight:700;">Section Title</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">16 / Bold</div>
+        <div class="type-sample" style="font-size:16px;font-weight:700;">This Week</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">26 / 800</div>
+        <div class="type-sample" style="font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;">340</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">15 / SemiBold</div>
+        <div class="type-sample" style="font-size:15px;font-weight:600;">Deep Focus</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">14 / Regular</div>
+        <div class="type-sample" style="font-size:14px;font-weight:400;">Body text and descriptions</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">13 / Regular</div>
+        <div class="type-sample" style="font-size:13px;font-weight:400;color:var(--doc-text-2);">Metadata, subtitles</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">11 / Medium</div>
+        <div class="type-sample" style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.4px;color:var(--doc-text-2);">THIS WEEK</div>
+      </div>
+    </div>
+
+    <h3 style="font-size:14px;font-weight:700;margin:24px 0 12px;color:var(--doc-text-2);">Spacing &amp; Radii</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+      <div>
+        <div class="spacing-row"><div class="spacing-bar" style="width:8px"></div><span class="spacing-label">4px - inner gaps</span></div>
+        <div class="spacing-row"><div class="spacing-bar" style="width:16px"></div><span class="spacing-label">8px - compact gap</span></div>
+        <div class="spacing-row"><div class="spacing-bar" style="width:24px"></div><span class="spacing-label">10-12px - card gaps</span></div>
+        <div class="spacing-row"><div class="spacing-bar" style="width:40px"></div><span class="spacing-label">16px - card padding</span></div>
+        <div class="spacing-row"><div class="spacing-bar" style="width:60px"></div><span class="spacing-label">20px - screen padding</span></div>
+        <div class="spacing-row"><div class="spacing-bar" style="width:80px"></div><span class="spacing-label">24px - section gap</span></div>
+      </div>
+      <div>
+        <div class="spacing-row"><div class="spacing-bar" style="width:24px;border-radius:6px"></div><span class="spacing-label">12px - buttons</span></div>
+        <div class="spacing-row"><div class="spacing-bar" style="width:32px;border-radius:7px"></div><span class="spacing-label">14px - stat cards, CTA</span></div>
+        <div class="spacing-row"><div class="spacing-bar" style="width:40px;border-radius:8px"></div><span class="spacing-label">16px - content cards</span></div>
+        <div class="spacing-row"><div class="spacing-bar" style="width:48px;border-radius:10px"></div><span class="spacing-label">20px - pills (full round)</span></div>
+        <div class="spacing-row"><div class="spacing-bar" style="width:56px;border-radius:50%"></div><span class="spacing-label">50% - avatar</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 1: DASHBOARD -->
+  <div class="section" id="dashboard">
+    <div class="section-label">Screen 1 of 3</div>
+    <h2>Dashboard</h2>
+    <span class="spec-badge full">Fully Specced</span>
+    <p class="section-desc">Match this screen exactly. Every color, size, and spacing value is defined in the tokens above.</p>
+
+    <div class="phone-container">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="phone-island"></div>
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-right">
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><rect x="0" y="6" width="3" height="6" rx="1" fill="#1A1D26"/><rect x="4.5" y="4" width="3" height="8" rx="1" fill="#1A1D26"/><rect x="9" y="2" width="3" height="10" rx="1" fill="#1A1D26"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="#1A1D26" opacity="0.3"/></svg>
+              <svg width="14" height="12" viewBox="0 0 14 12" fill="none"><path d="M7 2C9.8 2 12.2 3.2 14 5.2L12.6 6.6C11.1 5 9.2 4 7 4C4.8 4 2.9 5 1.4 6.6L0 5.2C1.8 3.2 4.2 2 7 2Z" fill="#1A1D26"/><path d="M7 6C8.7 6 10.2 6.7 11.2 7.8L9.8 9.2C9.1 8.4 8.1 8 7 8C5.9 8 4.9 8.4 4.2 9.2L2.8 7.8C3.8 6.7 5.3 6 7 6Z" fill="#1A1D26"/><circle cx="7" cy="11" r="1.5" fill="#1A1D26"/></svg>
+              <div class="status-battery"></div>
+            </div>
+          </div>
+
+          <div class="app-content">
+            <div class="app-greeting">
+              <div class="app-avatar">AM</div>
+              <div class="app-greeting-text">
+                <h3>Hey, Arjun</h3>
+                <p>Let's crush this week</p>
+              </div>
+            </div>
+
+            <div class="app-stats-row">
+              <div class="app-stat-card purple">
+                <div class="app-stat-icon">&#127919;</div>
+                <div class="app-stat-number">12</div>
+                <div class="app-stat-label">Sessions</div>
+              </div>
+              <div class="app-stat-card green">
+                <div class="app-stat-icon">&#129689;</div>
+                <div class="app-stat-number">340</div>
+                <div class="app-stat-label">Coins</div>
+              </div>
+              <div class="app-stat-card amber">
+                <div class="app-stat-icon">&#128293;</div>
+                <div class="app-stat-number">5</div>
+                <div class="app-stat-label">Day Streak</div>
+              </div>
+            </div>
+
+            <div class="app-section-head">This Week</div>
+            <div class="app-chart">
+              <div class="app-chart-col">
+                <div class="app-chart-bar" style="height:40%"></div>
+                <span class="app-chart-day">M</span>
+              </div>
+              <div class="app-chart-col">
+                <div class="app-chart-bar" style="height:60%"></div>
+                <span class="app-chart-day">T</span>
+              </div>
+              <div class="app-chart-col">
+                <div class="app-chart-bar" style="height:20%"></div>
+                <span class="app-chart-day">W</span>
+              </div>
+              <div class="app-chart-col">
+                <div class="app-chart-bar" style="height:40%"></div>
+                <span class="app-chart-day">T</span>
+              </div>
+              <div class="app-chart-col">
+                <div class="app-chart-bar" style="height:40%"></div>
+                <span class="app-chart-day">F</span>
+              </div>
+              <div class="app-chart-col">
+                <div class="app-chart-bar today" style="height:40%"></div>
+                <span class="app-chart-day">S</span>
+              </div>
+              <div class="app-chart-col">
+                <div class="app-chart-bar" style="height:0%"></div>
+                <span class="app-chart-day">S</span>
+              </div>
+            </div>
+
+            <div class="app-section-head">Today's Progress</div>
+            <div class="app-progress-card">
+              <svg class="app-progress-ring" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="40" stroke="#E5E7EB" stroke-width="7" fill="none"/>
+                <circle cx="50" cy="50" r="40" stroke="#6C5CE7" stroke-width="7" fill="none"
+                  stroke-dasharray="167 84" stroke-linecap="round" transform="rotate(-90 50 50)"/>
+                <text x="50" y="46" text-anchor="middle" font-size="22" font-weight="800" fill="#1A1D26">2/3</text>
+                <text x="50" y="62" text-anchor="middle" font-size="10" fill="#6B7280">sessions</text>
+              </svg>
+              <div class="app-progress-text">
+                <h4>Almost there!</h4>
+                <p>1 more session to keep your streak alive</p>
+              </div>
+            </div>
+
+            <div class="app-cta">Start Session</div>
+          </div>
+
+          <div class="tab-bar">
+            <div class="tab-item active">
+              <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+              <span>Dashboard</span>
+            </div>
+            <div class="tab-item">
+              <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+              <span>History</span>
+            </div>
+            <div class="tab-item">
+              <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.27 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg>
+              <span>Achievements</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotations">
+      <h4>Key measurements</h4>
+      <div class="anno-row"><span class="anno-prop">Screen padding</span><span class="anno-val">20px horizontal</span></div>
+      <div class="anno-row"><span class="anno-prop">Greeting font</span><span class="anno-val">22px / Bold / #1A1D26</span></div>
+      <div class="anno-row"><span class="anno-prop">Greeting subtitle</span><span class="anno-val">13px / Regular / #6B7280</span></div>
+      <div class="anno-row"><span class="anno-prop">Avatar</span><span class="anno-val">44px circle / bg #EDE9FE / text #6C5CE7 15px Bold</span></div>
+      <div class="anno-row"><span class="anno-prop">Stat cards</span><span class="anno-val">flex:1 / 14px padding / 14px radius / 10px gap</span></div>
+      <div class="anno-row"><span class="anno-prop">Stat number</span><span class="anno-val">26px / weight 800 / tabular-nums / #1A1D26</span></div>
+      <div class="anno-row"><span class="anno-prop">Stat label</span><span class="anno-val">11px / Medium / uppercase / 0.4px spacing / #6B7280</span></div>
+      <div class="anno-row"><span class="anno-prop">Section heading</span><span class="anno-val">16px / Bold / #1A1D26 / 24px top margin</span></div>
+      <div class="anno-row"><span class="anno-prop">Chart bars</span><span class="anno-val">max-width 36px / 8px gap / 6px top radius / 120px max height</span></div>
+      <div class="anno-row"><span class="anno-prop">Chart bar color</span><span class="anno-val">#EDE9FE default, #6C5CE7 for current day</span></div>
+      <div class="anno-row"><span class="anno-prop">Progress card</span><span class="anno-val">16px radius / 20px padding / white bg / shadow 0 1px 3px rgba(0,0,0,0.05)</span></div>
+      <div class="anno-row"><span class="anno-prop">Progress ring</span><span class="anno-val">72px SVG / 7px stroke / track #E5E7EB / fill #6C5CE7</span></div>
+      <div class="anno-row"><span class="anno-prop">CTA button</span><span class="anno-val">full width / 16px vertical padding / 14px radius / #6C5CE7 bg</span></div>
+      <div class="anno-row"><span class="anno-prop">CTA shadow</span><span class="anno-val">0 4px 14px rgba(108, 92, 231, 0.35)</span></div>
+      <div class="anno-row"><span class="anno-prop">Tab bar</span><span class="anno-val">white bg / 1px top border #E5E7EB / 8px top pad / 24px bottom pad</span></div>
+      <div class="anno-row"><span class="anno-prop">Tab label</span><span class="anno-val">10px / Medium / active #6C5CE7 / inactive #9CA3AF</span></div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: SESSION HISTORY -->
+  <div class="section" id="history">
+    <div class="section-label">Screen 2 of 3</div>
+    <h2>Session History</h2>
+    <span class="spec-badge partial">Partially Specced</span>
+    <p class="section-desc">The happy-path list view is designed. Empty states, loading skeletons, error handling, and pull-to-refresh behavior are left to you.</p>
+
+    <div class="phone-container">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="phone-island"></div>
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-right">
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><rect x="0" y="6" width="3" height="6" rx="1" fill="#1A1D26"/><rect x="4.5" y="4" width="3" height="8" rx="1" fill="#1A1D26"/><rect x="9" y="2" width="3" height="10" rx="1" fill="#1A1D26"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="#1A1D26" opacity="0.3"/></svg>
+              <svg width="14" height="12" viewBox="0 0 14 12" fill="none"><path d="M7 2C9.8 2 12.2 3.2 14 5.2L12.6 6.6C11.1 5 9.2 4 7 4C4.8 4 2.9 5 1.4 6.6L0 5.2C1.8 3.2 4.2 2 7 2Z" fill="#1A1D26"/><path d="M7 6C8.7 6 10.2 6.7 11.2 7.8L9.8 9.2C9.1 8.4 8.1 8 7 8C5.9 8 4.9 8.4 4.2 9.2L2.8 7.8C3.8 6.7 5.3 6 7 6Z" fill="#1A1D26"/><circle cx="7" cy="11" r="1.5" fill="#1A1D26"/></svg>
+              <div class="status-battery"></div>
+            </div>
+          </div>
+
+          <div class="app-content">
+            <h2 style="font-size:22px;font-weight:700;color:#1A1D26;margin:4px 0 16px;">History</h2>
+
+            <div class="app-filters">
+              <div class="app-filter-pill">Today</div>
+              <div class="app-filter-pill active">This Week</div>
+              <div class="app-filter-pill">This Month</div>
+              <div class="app-filter-pill">All</div>
+            </div>
+
+            <div class="app-session-card">
+              <div class="app-session-icon deep">&#127919;</div>
+              <div class="app-session-info">
+                <div class="app-session-title">Deep Focus</div>
+                <div class="app-session-meta">25 min &middot; Today, 2:30 PM</div>
+              </div>
+              <div class="app-session-coins">+50</div>
+            </div>
+
+            <div class="app-session-card">
+              <div class="app-session-icon quick">&#9889;</div>
+              <div class="app-session-info">
+                <div class="app-session-title">Quick Sprint</div>
+                <div class="app-session-meta">15 min &middot; Today, 11:00 AM</div>
+              </div>
+              <div class="app-session-coins">+30</div>
+            </div>
+
+            <div class="app-session-card">
+              <div class="app-session-icon deep">&#127919;</div>
+              <div class="app-session-info">
+                <div class="app-session-title">Deep Focus</div>
+                <div class="app-session-meta">25 min &middot; Yesterday, 4:15 PM</div>
+              </div>
+              <div class="app-session-coins">+50</div>
+            </div>
+
+            <div class="app-session-card">
+              <div class="app-session-icon pomo">&#127813;</div>
+              <div class="app-session-info">
+                <div class="app-session-title">Pomodoro</div>
+                <div class="app-session-meta">25 min &middot; Yesterday, 10:30 AM</div>
+              </div>
+              <div class="app-session-coins">+50</div>
+            </div>
+
+            <div class="app-session-card">
+              <div class="app-session-icon quick">&#9889;</div>
+              <div class="app-session-info">
+                <div class="app-session-title">Quick Sprint</div>
+                <div class="app-session-meta">15 min &middot; Thu, 6:00 PM</div>
+              </div>
+              <div class="app-session-coins">+30</div>
+            </div>
+
+            <div style="text-align:center;padding:16px 0 8px;">
+              <span style="font-size:13px;color:#9CA3AF;">Scroll for more</span>
+            </div>
+          </div>
+
+          <div class="tab-bar">
+            <div class="tab-item">
+              <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+              <span>Dashboard</span>
+            </div>
+            <div class="tab-item active">
+              <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+              <span>History</span>
+            </div>
+            <div class="tab-item">
+              <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.27 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg>
+              <span>Achievements</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotations">
+      <h4>Key measurements</h4>
+      <div class="anno-row"><span class="anno-prop">Page title</span><span class="anno-val">22px / Bold / #1A1D26</span></div>
+      <div class="anno-row"><span class="anno-prop">Filter pills</span><span class="anno-val">7px 16px padding / 20px radius / 13px SemiBold</span></div>
+      <div class="anno-row"><span class="anno-prop">Active pill</span><span class="anno-val">bg #6C5CE7 / text white / no border</span></div>
+      <div class="anno-row"><span class="anno-prop">Inactive pill</span><span class="anno-val">bg white / text #6B7280 / 1px border #E5E7EB</span></div>
+      <div class="anno-row"><span class="anno-prop">Session card</span><span class="anno-val">14px 16px padding / 14px radius / white bg / 10px gap between cards</span></div>
+      <div class="anno-row"><span class="anno-prop">Session icon</span><span class="anno-val">40px square / 12px radius / tinted bg matching type</span></div>
+      <div class="anno-row"><span class="anno-prop">Session title</span><span class="anno-val">15px / SemiBold / #1A1D26</span></div>
+      <div class="anno-row"><span class="anno-prop">Session meta</span><span class="anno-val">12px / Regular / #9CA3AF / "duration &middot; date, time"</span></div>
+      <div class="anno-row"><span class="anno-prop">Coins text</span><span class="anno-val">14px / Bold / #00B894</span></div>
+    </div>
+
+    <div class="your-call">
+      <strong>Your call</strong>
+      These states are intentionally undesigned. Build what feels right for the product:
+      <b>empty state</b> (no sessions yet), <b>loading skeleton</b> (data fetching), <b>error state</b> (API failure), <b>pull-to-refresh</b> behavior, <b>infinite scroll or pagination</b> for long lists, and the <b>session detail view</b> when a card is tapped.
+    </div>
+  </div>
+
+  <!-- SCREEN 3: ACHIEVEMENTS -->
+  <div class="section" id="achievements">
+    <div class="section-label">Screen 3 of 3</div>
+    <h2>Achievements</h2>
+    <span class="spec-badge wireframe">Wireframe Only</span>
+    <p class="section-desc">This screen is intentionally underspecified. You are the product engineer. Make it feel like it belongs with the other 2 screens. Use the same tokens, but the layout, interactions, and visual treatment are yours.</p>
+
+    <div class="phone-container">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="phone-island"></div>
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-right">
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><rect x="0" y="6" width="3" height="6" rx="1" fill="#1A1D26"/><rect x="4.5" y="4" width="3" height="8" rx="1" fill="#1A1D26"/><rect x="9" y="2" width="3" height="10" rx="1" fill="#1A1D26"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="#1A1D26" opacity="0.3"/></svg>
+              <svg width="14" height="12" viewBox="0 0 14 12" fill="none"><path d="M7 2C9.8 2 12.2 3.2 14 5.2L12.6 6.6C11.1 5 9.2 4 7 4C4.8 4 2.9 5 1.4 6.6L0 5.2C1.8 3.2 4.2 2 7 2Z" fill="#1A1D26"/><path d="M7 6C8.7 6 10.2 6.7 11.2 7.8L9.8 9.2C9.1 8.4 8.1 8 7 8C5.9 8 4.9 8.4 4.2 9.2L2.8 7.8C3.8 6.7 5.3 6 7 6Z" fill="#1A1D26"/><circle cx="7" cy="11" r="1.5" fill="#1A1D26"/></svg>
+              <div class="status-battery"></div>
+            </div>
+          </div>
+
+          <div class="app-content">
+            <h2 style="font-size:22px;font-weight:700;color:#1A1D26;margin:4px 0 8px;">Achievements</h2>
+            <p style="font-size:13px;color:#9CA3AF;margin:0 0 20px;">5 of 12 unlocked</p>
+
+            <div class="wf-block">
+              Summary / progress overview area<br>
+              <span style="font-size:11px;">(your design decision)</span>
+            </div>
+
+            <div class="wf-grid">
+              <div class="wf-badge">First Steps<br><span style="font-size:10px;color:#00B894;">unlocked</span></div>
+              <div class="wf-badge">Week Warrior<br><span style="font-size:10px;color:#00B894;">unlocked</span></div>
+              <div class="wf-badge">Coin Starter<br><span style="font-size:10px;color:#00B894;">unlocked</span></div>
+              <div class="wf-badge">Focus Master<br><span style="font-size:10px;color:#00B894;">unlocked</span></div>
+              <div class="wf-badge">Early Bird<br><span style="font-size:10px;color:#00B894;">unlocked</span></div>
+              <div class="wf-badge">Streak Legend<br><span style="font-size:10px;">5/30</span></div>
+              <div class="wf-badge">Coin Collector<br><span style="font-size:10px;">340/1000</span></div>
+              <div class="wf-badge">Marathon<br><span style="font-size:10px;">24/50</span></div>
+              <div class="wf-badge">Night Owl<br><span style="font-size:10px;">1/5</span></div>
+              <div class="wf-badge">Perfectionist<br><span style="font-size:10px;">2/7</span></div>
+              <div class="wf-badge">Social Star<br><span style="font-size:10px;">0/3</span></div>
+              <div class="wf-badge">Legend<br><span style="font-size:10px;">5/11</span></div>
+            </div>
+
+            <div class="wf-block">
+              Detail / tap interaction area<br>
+              <span style="font-size:11px;">(your design decision)</span>
+            </div>
+          </div>
+
+          <div class="tab-bar">
+            <div class="tab-item">
+              <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+              <span>Dashboard</span>
+            </div>
+            <div class="tab-item">
+              <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+              <span>History</span>
+            </div>
+            <div class="tab-item active">
+              <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.27 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg>
+              <span>Achievements</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="your-call">
+      <strong>Your call - everything</strong>
+      The wireframe shows data structure only. You decide: visual treatment for locked vs unlocked badges, progress indicators, animations or transitions on unlock, grid vs list vs mixed layout, tap-to-detail interaction, and any motivational copy. Make it feel like it belongs with the Dashboard and History screens.
+    </div>
+  </div>
+
+  <!-- NOTES -->
+  <div class="section" id="notes">
+    <div class="section-label">Reference</div>
+    <h2>Additional Notes</h2>
+
+    <div style="background:var(--doc-surface);border:1px solid var(--doc-border);border-radius:var(--doc-radius);padding:20px 24px;margin-bottom:16px;">
+      <h4 style="font-size:13px;font-weight:700;margin:0 0 12px;color:var(--doc-accent);">Navigation</h4>
+      <p style="font-size:14px;margin:0 0 8px;">3 bottom tabs: Dashboard, History, Achievements. Use Expo Router with a <code style="font-family:var(--doc-mono);font-size:12px;background:var(--doc-surface-2);padding:2px 6px;border-radius:4px;">(tabs)</code> layout.</p>
+      <p style="font-size:14px;margin:0;">"Start Session" on Dashboard navigates to a <strong>Focus Timer</strong> screen (not in this design spec - you build it from scratch). Tapping a session card in History navigates to a <strong>Session Detail</strong> screen (also your design).</p>
+    </div>
+
+    <div style="background:var(--doc-surface);border:1px solid var(--doc-border);border-radius:var(--doc-radius);padding:20px 24px;margin-bottom:16px;">
+      <h4 style="font-size:13px;font-weight:700;margin:0 0 12px;color:var(--doc-accent);">Shadows</h4>
+      <div class="anno-row"><span class="anno-prop">Card shadow</span><span class="anno-val">0 1px 3px rgba(0, 0, 0, 0.05)</span></div>
+      <div class="anno-row"><span class="anno-prop">CTA button shadow</span><span class="anno-val">0 4px 14px rgba(108, 92, 231, 0.35)</span></div>
+      <div class="anno-row"><span class="anno-prop">Phone bezel shadow</span><span class="anno-val">(not part of app - just the mockup frame)</span></div>
+    </div>
+
+    <div style="background:var(--doc-surface);border:1px solid var(--doc-border);border-radius:var(--doc-radius);padding:20px 24px;">
+      <h4 style="font-size:13px;font-weight:700;margin:0 0 12px;color:var(--doc-accent);">API data quirks</h4>
+      <p style="font-size:14px;margin:0 0 8px;">The API returns session types as <code style="font-family:var(--doc-mono);font-size:12px;background:var(--doc-surface-2);padding:2px 6px;border-radius:4px;">deep_focus</code>, <code style="font-family:var(--doc-mono);font-size:12px;background:var(--doc-surface-2);padding:2px 6px;border-radius:4px;">quick_sprint</code>, <code style="font-family:var(--doc-mono);font-size:12px;background:var(--doc-surface-2);padding:2px 6px;border-radius:4px;">pomodoro</code> (snake_case). The design shows them as title case ("Deep Focus"). You must transform them.</p>
+      <p style="font-size:14px;margin:0 0 8px;">Durations come as milliseconds (<code style="font-family:var(--doc-mono);font-size:12px;background:var(--doc-surface-2);padding:2px 6px;border-radius:4px;">durationMs</code>). The design shows "25 min".</p>
+      <p style="font-size:14px;margin:0;">See <code style="font-family:var(--doc-mono);font-size:12px;background:var(--doc-surface-2);padding:2px 6px;border-radius:4px;">API-SPEC.md</code> in the starter repo for the full endpoint reference.</p>
+    </div>
+  </div>
+
+</div>
