@@ -2,7 +2,7 @@ import { Router, type Request, type Response } from 'express';
 import { randomUUID } from 'crypto';
 import { getDb } from '../db';
 import { encodeCursor, decodeCursor } from '../lib/pagination';
-import { getReferenceNow, filterBounds, weekBounds, dayBounds } from '../lib/time';
+import { filterBounds, weekBounds, dayBounds } from '../lib/time';
 import {toStudent,toSessionListItem,toSessionDetail,toAchievement,type StudentRow,type SessionRow,type TimelineRow,type AchievementRow,} from '../lib/mappers';
 
 const router = Router();
@@ -48,7 +48,7 @@ router.get('/:id/sessions', (req: Request, res: Response) => {
 
   let bounds: [number, number] | null;
   try {
-    bounds = filterBounds(req.query.filter as string | undefined, getReferenceNow(id));
+    bounds = filterBounds(req.query.filter as string | undefined, Date.now());
   } catch {
     return res.status(400).json({ message: 'filter must be one of: today, week, month' });
   }
@@ -131,9 +131,9 @@ router.get('/:id/stats', (req: Request, res: Response) => {
   const student = findStudent(id);
   if (!student) return res.status(404).json({ message: 'Student not found' });
 
-  const refNow = getReferenceNow(id);
-  const [weekStart, weekEnd] = weekBounds(refNow);
-  const [todayStart, todayEnd] = dayBounds(refNow);
+  const now = Date.now();
+  const [weekStart, weekEnd] = weekBounds(now);
+  const [todayStart, todayEnd] = dayBounds(now);
 
   const weekRows = getDb()
     .prepare(

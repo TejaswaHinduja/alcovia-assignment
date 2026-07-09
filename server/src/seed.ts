@@ -32,16 +32,31 @@ const insertAchievement = db.prepare(`
   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 `);
 
+// The fixture dates are fixed, so they drift into the past as real time moves
+// on. Shift every timestamp by the same amount so the newest session happened
+
+const newestStartedAt = Math.max(...sessions.map((s) => s.startedAt));
+const offset = Date.now() - newestStartedAt;
+
 const seedAll = db.transaction(() => {
   for (const s of students) {
     insertStudent.run(s.id, s.name, s.initials, s.totalCoins, s.currentStreak, s.dailyGoal, s.joinedAt);
   }
 
   for (const s of sessions) {
-    insertSession.run(s.id, s.studentId, s.type, s.durationMs, s.coins, s.status, s.startedAt, s.completedAt);
-    if (s.timeline) {
+    const newStartedAt = s.startedAt + offset;
+    insertSession.run(
+      s.id, s.studentId, s.type, s.durationMs, s.coins, s.status,
+      newStartedAt,
+      s.completedAt == null ? null : s.completedAt + offset
+    );
+    if (s.timeline && s.timeline.length > 0) {
+      // Timeline entries start at the session's (shifted) start time,
+      // keeping the original gaps between focus/break blocks.
+      const firstEntry = new Date(s.timeline[0].startedAt).getTime();
       for (const t of s.timeline) {
-        insertTimeline.run(s.id, t.type, t.durationMs, t.startedAt);
+        const gap = new Date(t.startedAt).getTime() - firstEntry;
+        insertTimeline.run(s.id, t.type, t.durationMs, new Date(newStartedAt + gap).toISOString());
       }
     }
   }

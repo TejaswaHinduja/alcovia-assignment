@@ -1,18 +1,3 @@
-import { getDb } from '../db';
-
-/**
- * The seed data's epoch timestamps are in the past relative to the wall clock,
- * so filtering by `Date.now()` would return nothing. We anchor "now" to the
- * newest session for the student Falls back to the real
- * clock when the student has no sessions yet.
- */
-export function getReferenceNow(studentId: string): number {
-  const row = getDb()
-    .prepare('SELECT MAX(started_at) AS max FROM sessions WHERE student_id = ?')
-    .get(studentId) as { max: number | null };
-  return row?.max ?? Date.now();
-}
-
 const DAY_MS = 86_400_000;
 
 /** [start, end) of the UTC day containing `ms`. */

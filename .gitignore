@@ -10,7 +10,7 @@ dist/
 web-build/
 .env
 .env.*
-
+.md
 # Server
 server/node_modules/
 server/data/
