@@ -79,7 +79,7 @@ export default function DashboardScreen() {
         <Pressable
           style={({ pressed }) => [styles.cta, pressed && styles.ctaPressed]}
           onPress={() => {
-            // Navigates to the Focus Timer screen (built separately).
+            router.push('/')
           }}
         >
           <Text style={styles.ctaText}>Start Session</Text>
