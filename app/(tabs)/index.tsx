@@ -1,47 +1,32 @@
-import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Pressable, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import Svg, { Circle } from 'react-native-svg';
 import { Colors, Shadows, Radii, Spacing } from '@/constants/Colors';
-import type { Student, WeeklyStats } from '@/types/api';
+import { useDashboard } from '@/lib/useDashboard';
+import { ErrorState } from '@/components/StateViews';
+import type { WeeklyStats } from '@/types/api';
 
-/**
- * Mock data shaped exactly like the API responses (GET /students/:id and
- * GET /students/:id/stats?period=week). The screen reads only from these
- * objects, so swapping in a real `fetch` later is a drop-in change.
- */
-const student: Student = {
-  id: 'stu_01',
-  name: 'Arjun Mehta',
-  initials: 'AM',
-  totalCoins: 340,
-  currentStreak: 5,
-  dailyGoal: 3,
-  joinedAt: '2026-05-15T10:00:00.000Z',
-};
-
-const stats: WeeklyStats = {
-  totalSessions: 12,
-  totalCoins: 340,
-  streak: 5,
-  todayCompleted: 2,
-  dailyGoal: 3,
-  sessionsPerDay: [
-    { day: 'mon', count: 2 },
-    { day: 'tue', count: 3 },
-    { day: 'wed', count: 1 },
-    { day: 'thu', count: 2 },
-    { day: 'fri', count: 2 },
-    { day: 'sat', count: 2 }, // current day (highlighted)
-    { day: 'sun', count: 0 },
-  ],
-};
-
-// The API sends the current day server-side; here we pin it to Saturday to
-// mirror the design mockup.
-const TODAY = 'sat';
+const DAY_KEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 
 export default function DashboardScreen() {
+  const router = useRouter();
+  const { student, stats, status, error, retry } = useDashboard();
+
+  if (status === 'loading' || !student || !stats) {
+    return (
+      <SafeAreaView style={styles.container} edges={['top']}>
+        {status === 'error' ? (
+          <ErrorState message={error ?? 'Failed to load dashboard'} onRetry={retry} />
+        ) : (
+          <ActivityIndicator style={{ marginTop: 60 }} color={Colors.primary} />
+        )}
+      </SafeAreaView>
+    );
+  }
+
   const firstName = student.name.split(' ')[0];
+  const today = DAY_KEYS[new Date().getDay()];
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -69,7 +54,7 @@ export default function DashboardScreen() {
 
         {/* ---- This Week chart ---- */}
         <Text style={styles.sectionHead}>This Week</Text>
-        <WeekChart data={stats.sessionsPerDay} today={TODAY} />
+        <WeekChart data={stats.sessionsPerDay} today={today} />
 
         {/* ---- Today's Progress ---- */}
         <Text style={styles.sectionHead}>Today's Progress</Text>
@@ -78,9 +63,7 @@ export default function DashboardScreen() {
         {/* ---- CTA ---- */}
         <Pressable
           style={({ pressed }) => [styles.cta, pressed && styles.ctaPressed]}
-          onPress={() => {
-            router.push('/')
-          }}
+          onPress={() => router.push('/timer')}
         >
           <Text style={styles.ctaText}>Start Session</Text>
         </Pressable>

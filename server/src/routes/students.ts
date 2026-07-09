@@ -3,7 +3,7 @@ import { randomUUID } from 'crypto';
 import { getDb } from '../db';
 import { encodeCursor, decodeCursor } from '../lib/pagination';
 import { getReferenceNow, filterBounds, weekBounds, dayBounds } from '../lib/time';
-import {toStudent,toSessionListItem,toSessionDetail,type StudentRow,type SessionRow,type TimelineRow,} from '../lib/mappers';
+import {toStudent,toSessionListItem,toSessionDetail,toAchievement,type StudentRow,type SessionRow,type TimelineRow,type AchievementRow,} from '../lib/mappers';
 
 const router = Router();
 
@@ -16,10 +16,6 @@ const COINS_BY_TYPE: Record<string, number> = {
 };
 const DAY_KEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] ;
 
-/** Small helpers for consistent error shapes. */
-function fail(res: Response, status: number, code: string, error: string) {
-  res.status(status).json({ error, code });
-}
 function findStudent(id: string): StudentRow | undefined {
   return getDb().prepare('SELECT * FROM students WHERE id = ?').get(id) as StudentRow | undefined;
 }
@@ -29,7 +25,7 @@ function findStudent(id: string): StudentRow | undefined {
 
 router.get('/:id', (req: Request, res: Response) => {
   const student = findStudent(req.params.id);
-  if (!student) return fail(res, 404, 'NOT_FOUND', 'Student not found');
+  if (!student) return res.status(404).json({ message: 'Student not found' });
   res.json(toStudent(student));
 });
 
@@ -38,14 +34,14 @@ router.get('/:id', (req: Request, res: Response) => {
 
 router.get('/:id/sessions', (req: Request, res: Response) => {
   const { id } = req.params;
-  if (!findStudent(id)) return fail(res, 404, 'NOT_FOUND', 'Student not found');
+  if (!findStudent(id)) return res.status(404).json({ message: 'Student not found' });
 
   
   let limit = DEFAULT_LIMIT;
   if (req.query.limit !== undefined) {
     const parsed = Number(req.query.limit);
     if (!Number.isInteger(parsed) || parsed < 1 || parsed > MAX_LIMIT) {
-      return fail(res, 400, 'BAD_REQUEST', `limit must be an integer between 1 and ${MAX_LIMIT}`);
+      return res.status(400).json({ message: `limit must be an integer between 1 and ${MAX_LIMIT}` });
     }
     limit = parsed;
   }
@@ -54,7 +50,7 @@ router.get('/:id/sessions', (req: Request, res: Response) => {
   try {
     bounds = filterBounds(req.query.filter as string | undefined, getReferenceNow(id));
   } catch {
-    return fail(res, 400, 'BAD_REQUEST', 'filter must be one of: today, week, month');
+    return res.status(400).json({ message: 'filter must be one of: today, week, month' });
   }
 
   
@@ -71,7 +67,7 @@ router.get('/:id/sessions', (req: Request, res: Response) => {
       clauses.push('(started_at < ? OR (started_at = ? AND id < ?))');
       args.push(c.startedAt, c.startedAt, c.id);
     } catch {
-      return fail(res, 400, 'BAD_REQUEST', 'Invalid cursor');
+      return res.status(400).json({ message: 'Invalid cursor' });
     }
   }
 
@@ -99,12 +95,12 @@ router.get('/:id/sessions', (req: Request, res: Response) => {
 
 router.get('/:id/sessions/:sessionId', (req: Request, res: Response) => {
   const { id, sessionId } = req.params;
-  if (!findStudent(id)) return fail(res, 404, 'NOT_FOUND', 'Student not found');
+  if (!findStudent(id)) return res.status(404).json({ message: 'Student not found' });
 
   const session = getDb()
     .prepare('SELECT * FROM sessions WHERE id = ? AND student_id = ?')
     .get(sessionId, id) as SessionRow | undefined;
-  if (!session) return fail(res, 404, 'NOT_FOUND', 'Session not found');
+  if (!session) return res.status(404).json({ message: 'Session not found' });
 
   const timeline = getDb()
     .prepare('SELECT type, duration_ms, started_at FROM session_timeline WHERE session_id = ? ORDER BY id')
@@ -114,12 +110,26 @@ router.get('/:id/sessions/:sessionId', (req: Request, res: Response) => {
 });
 
 
+// GET /students/:id/achievements
+
+router.get('/:id/achievements', (req: Request, res: Response) => {
+  const { id } = req.params;
+  if (!findStudent(id)) return res.status(404).json({ message: 'Student not found' });
+
+  const rows = getDb()
+    .prepare('SELECT * FROM achievements WHERE student_id = ? ORDER BY id')
+    .all(id) as AchievementRow[];
+
+  res.json(rows.map(toAchievement));
+});
+
+
 // GET /students/:id/stats?period=week
 
 router.get('/:id/stats', (req: Request, res: Response) => {
   const { id } = req.params;
   const student = findStudent(id);
-  if (!student) return fail(res, 404, 'NOT_FOUND', 'Student not found');
+  if (!student) return res.status(404).json({ message: 'Student not found' });
 
   const refNow = getReferenceNow(id);
   const [weekStart, weekEnd] = weekBounds(refNow);
@@ -160,14 +170,14 @@ router.get('/:id/stats', (req: Request, res: Response) => {
 router.post('/:id/sessions', (req: Request, res: Response) => {
   const { id } = req.params;
   const student = findStudent(id);
-  if (!student) return fail(res, 404, 'NOT_FOUND', 'Student not found');
+  if (!student) return res.status(404).json({ message: 'Student not found' });
 
   const { type, durationMs, timeline } = req.body ?? {};
   if (!type || !(type in COINS_BY_TYPE)) {
-    return fail(res, 400, 'BAD_REQUEST', 'type must be deep_focus, quick_sprint, or pomodoro');
+    return res.status(400).json({ message: 'type must be deep_focus, quick_sprint, or pomodoro' });
   }
   if (typeof durationMs !== 'number' || durationMs <= 0) {
-    return fail(res, 400, 'BAD_REQUEST', 'durationMs must be a positive number');
+    return res.status(400).json({ message: 'durationMs must be a positive number' });
   }
 
   const db = getDb();

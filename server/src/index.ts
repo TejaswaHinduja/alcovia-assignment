@@ -19,13 +19,13 @@ app.use('/api/students', studentRoutes);
 
 // 404 for unknown routes
 app.use((_req, res) => {
-  res.status(404).json({ error: 'Not found', code: 'NOT_FOUND' });
+  res.status(404).json({ message: 'Not found' });
 });
 
 // Central error handler — keeps handlers free of try/catch boilerplate
 app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error(err);
-  res.status(500).json({ error: 'Internal server error', code: 'INTERNAL' });
+  res.status(500).json({ message: 'Internal server error' });
 });
 
 app.listen(PORT, () => {

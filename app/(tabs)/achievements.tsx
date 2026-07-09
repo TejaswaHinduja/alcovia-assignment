@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { View,Text,StyleSheet,FlatList,Pressable,Modal,ActivityIndicator,} from 'react-native';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { View,Text,StyleSheet,FlatList,Pressable,Modal,Animated,} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Radii, Shadows, Spacing } from '@/constants/Colors';
@@ -18,7 +18,7 @@ export default function AchievementsScreen() {
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
         <Header unlocked={0} total={0} />
-        <ActivityIndicator style={{ marginTop: 60 }} color={Colors.primary} />
+        <SkeletonGrid />
       </SafeAreaView>
     );
   }
@@ -34,6 +34,7 @@ export default function AchievementsScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
+      <Header unlocked={unlockedCount} total={data.length} />
       <FlatList
         data={padToRows(data)}
         keyExtractor={(item, i) => item?.id ?? `spacer-${i}`}
@@ -43,7 +44,6 @@ export default function AchievementsScreen() {
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={
           <>
-            <Header unlocked={unlockedCount} total={data.length} />
             <SummaryCard unlocked={unlockedCount} total={data.length} />
             <Text style={styles.sectionHead}>All Badges</Text>
           </>
@@ -140,6 +140,38 @@ function Badge({ achievement, onPress }: { achievement: Achievement; onPress: ()
   );
 }
 
+/* -------------------- Loading skeleton -------------------- */
+
+function SkeletonGrid() {
+  const opacity = useRef(new Animated.Value(0.4)).current;
+
+  useEffect(() => {
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(opacity, { toValue: 1, duration: 700, useNativeDriver: true }),
+        Animated.timing(opacity, { toValue: 0.4, duration: 700, useNativeDriver: true }),
+      ])
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [opacity]);
+
+  return (
+    <View style={styles.grid}>
+      <Animated.View style={[styles.summary, styles.skelSummary, { opacity }]} />
+      <View style={styles.skelRow}>
+        {Array.from({ length: 6 }).map((_, i) => (
+          <Animated.View key={i} style={[styles.badge, styles.skelBadge, { opacity }]}>
+            <View style={[styles.badgeIcon, styles.skelBlock]} />
+            <View style={[styles.skelBlock, styles.skelLine]} />
+            <View style={[styles.skelBlock, styles.skelLineShort]} />
+          </Animated.View>
+        ))}
+      </View>
+    </View>
+  );
+}
+
 /* -------------------- Detail modal -------------------- */
 
 function DetailModal({
@@ -210,7 +242,11 @@ function padToRows(data: Achievement[]): (Achievement | null)[] {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
-  header: { paddingTop: Spacing.xs, marginBottom: Spacing.xl },
+  header: {
+    paddingHorizontal: Spacing.xl,
+    paddingTop: Spacing.md,
+    marginBottom: Spacing.xl,
+  },
   pageTitle: {
     fontFamily: 'Inter_700Bold',
     fontSize: 22,
@@ -387,4 +423,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.text,
   },
+
+  // skeleton
+  skelSummary: { height: 110 },
+  skelRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  skelBadge: { flexBasis: '30%', flexGrow: 1 },
+  skelBlock: {
+    backgroundColor: Colors.border,
+    borderRadius: 6,
+  },
+  skelLine: { height: 12, width: '70%', marginBottom: 6 },
+  skelLineShort: { height: 10, width: '45%' },
 });

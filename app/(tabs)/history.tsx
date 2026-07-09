@@ -29,9 +29,12 @@ export default function HistoryScreen() {
     <SafeAreaView style={styles.container} edges={['top']}>
       <Text style={styles.pageTitle}>History</Text>
 
-      {/* Filter pills stay interactive in every state */}
+      {/* Filter pills stay interactive in every state.
+          flexGrow: 0 keeps the ScrollView at its natural height — without it,
+          the list below squeezes the pills until the text is clipped. */}
       <ScrollView
         horizontal
+        style={styles.filtersBar}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.filters}
       >
@@ -156,6 +159,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.xl,
     marginTop: Spacing.xs,
     marginBottom: Spacing.lg,
+  },
+  filtersBar: {
+    flexGrow: 0,
+    flexShrink: 0,
   },
   filters: {
     paddingHorizontal: Spacing.xl,

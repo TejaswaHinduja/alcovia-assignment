@@ -32,6 +32,18 @@ export interface TimelineRow {
   started_at: string;
 }
 
+export interface AchievementRow {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  student_id: string;
+  unlocked_at: string | null;
+  progress: number;
+  target: number;
+  current: number;
+}
+
 export function toStudent(r: StudentRow) {
   return {
     id: r.id,
@@ -55,6 +67,19 @@ export function toSessionListItem(r: SessionRow) {
     status: r.status,
     startedAt: r.started_at,
     completedAt: r.completed_at,
+  };
+}
+
+export function toAchievement(r: AchievementRow) {
+  return {
+    id: r.id,
+    name: r.name,
+    description: r.description,
+    icon: r.icon,
+    unlockedAt: r.unlocked_at,
+    progress: r.progress,
+    target: r.target,
+    current: r.current,
   };
 }
 
