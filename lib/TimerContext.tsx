@@ -31,10 +31,6 @@ const TimerContext = createContext<TimerContextValue | null>(null);
 
 /**
  * The timer lives HERE, at the app root, not inside the timer screen.
- * Screens unmount when you navigate away — if the countdown state lived in
- * the screen it would reset every time you left. The provider never
- * unmounts, so the session keeps ticking (and still saves to the API when
- * it finishes) even while you're on another tab.
  */
 export function TimerProvider({ children }: { children: ReactNode }) {
   const [option, setOption] = useState(SESSION_OPTIONS[0]);

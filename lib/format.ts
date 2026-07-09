@@ -1,6 +1,6 @@
 import type { SessionType } from '@/types/api';
 
-/** deep_focus → "Deep Focus" (API returns snake_case, design shows title case). */
+/** "Deep Focus" (API returns snake_case, design shows title case). */
 export function titleCaseType(type: string): string {
   return type
     .split('_')
@@ -8,7 +8,7 @@ export function titleCaseType(type: string): string {
     .join(' ');
 }
 
-/** durationMs → "25 min" (API returns milliseconds, design shows minutes). */
+/** (API returns milliseconds, design shows minutes). */
 export function formatDuration(durationMs: number): string {
   return `${Math.round(durationMs / 60000)} min`;
 }
@@ -16,8 +16,7 @@ export function formatDuration(durationMs: number): string {
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-// Formatted manually rather than via Intl/toLocaleString, which is unreliable
-// on Hermes across locales.
+
 function formatTime(d: Date): string {
   let h = d.getHours();
   const m = d.getMinutes();

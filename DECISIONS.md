@@ -45,7 +45,7 @@ The weakest part is the timer's timekeeping. It counts down by decrementing a nu
 
 Second on the list: the gamification data is static. Completing sessions adds coins, but `current_streak` and achievement progress never actually recalculate on the server — the numbers come from the seed data. So the loop of "do a session → watch your badge progress move" isn't real yet.
 
-Third: there are zero automated tests. The pagination and time-window logic are exactly the kind of fiddly code where tests would help, and right now I'm verifying them by hand with curl.
+Third: there are zero automated tests. The pagination and time-window logic are exactly the kind of code where tests would help, and right now I'm verifying them by hand with curl.
 
 ## What Breaks at Scale
 

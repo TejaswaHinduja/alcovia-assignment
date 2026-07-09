@@ -13,10 +13,6 @@ const TINT_BG = {
   amber: Colors.amberLight,
 };
 
-/**
- * Pure UI — all timer state and logic live in TimerContext at the app root,
- * so leaving this screen doesn't reset a running session.
- */
 export default function TimerScreen() {
   const router = useRouter();
   const {
