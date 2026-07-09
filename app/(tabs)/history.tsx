@@ -29,7 +29,7 @@ export default function HistoryScreen() {
     <SafeAreaView style={styles.container} edges={['top']}>
       <Text style={styles.pageTitle}>History</Text>
 
-      {/* Filter pills stay interactive in every state.
+      {/* Filter stay interactive in every state.
           flexGrow: 0 keeps the ScrollView at its natural height — without it,
           the list below squeezes the pills until the text is clipped. */}
       <ScrollView

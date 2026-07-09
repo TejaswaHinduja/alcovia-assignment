@@ -1,20 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import Svg, { Circle } from 'react-native-svg';
 import { Colors, Radii, Shadows, Spacing } from '@/constants/Colors';
-import { api } from '@/lib/api';
+import { useTimer, SESSION_OPTIONS } from '@/lib/TimerContext';
 import { SESSION_VISUALS, titleCaseType } from '@/lib/format';
-import type { SessionType } from '@/types/api';
-
-/** Durations and rewards mirror the server's COINS_BY_TYPE. */
-const SESSION_OPTIONS: { type: SessionType; minutes: number; coins: number }[] = [
-  { type: 'deep_focus', minutes: 25, coins: 50 },
-  { type: 'quick_sprint', minutes: 15, coins: 30 },
-  { type: 'pomodoro', minutes: 25, coins: 50 },
-];
 
 const TINT_BG = {
   purple: Colors.primaryLight,
@@ -22,70 +13,26 @@ const TINT_BG = {
   amber: Colors.amberLight,
 };
 
-type Phase = 'idle' | 'running' | 'paused' | 'saving' | 'done' | 'error';
-
+/**
+ * Pure UI — all timer state and logic live in TimerContext at the app root,
+ * so leaving this screen doesn't reset a running session.
+ */
 export default function TimerScreen() {
   const router = useRouter();
-
-  const [option, setOption] = useState(SESSION_OPTIONS[0]);
-  const [phase, setPhase] = useState<Phase>('idle');
-  const [secondsLeft, setSecondsLeft] = useState(SESSION_OPTIONS[0].minutes * 60);
-  const [coinsEarned, setCoinsEarned] = useState(0);
-  const [error, setError] = useState<string | null>(null);
-
-  // When the countdown actually began — sent to the API as the timeline start.
-  const startedAtRef = useRef<string>('');
-
-  const totalSeconds = option.minutes * 60;
-
-  // The countdown itself: tick once a second while running.
-  useEffect(() => {
-    if (phase !== 'running') return;
-    const interval = setInterval(() => {
-      setSecondsLeft((s) => s - 1);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [phase]);
-
-  // When the countdown reaches zero, save the session to the API.
-  useEffect(() => {
-    if (phase === 'running' && secondsLeft <= 0) saveSession();
-  });
-
-  async function saveSession() {
-    setPhase('saving');
-    try {
-      const created = await api.createSession({
-        type: option.type,
-        durationMs: totalSeconds * 1000,
-        timeline: [
-          { type: 'focus', durationMs: totalSeconds * 1000, startedAt: startedAtRef.current },
-        ],
-      });
-      setCoinsEarned(created.coins);
-      setPhase('done');
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to save session');
-      setPhase('error');
-    }
-  }
-
-  function start() {
-    startedAtRef.current = new Date().toISOString();
-    setSecondsLeft(totalSeconds);
-    setPhase('running');
-  }
-
-  function selectOption(o: (typeof SESSION_OPTIONS)[number]) {
-    setOption(o);
-    setSecondsLeft(o.minutes * 60);
-  }
-
-  function reset() {
-    setPhase('idle');
-    setSecondsLeft(totalSeconds);
-    setError(null);
-  }
+  const {
+    option,
+    phase,
+    secondsLeft,
+    totalSeconds,
+    coinsEarned,
+    error,
+    selectOption,
+    start,
+    pause,
+    resume,
+    reset,
+    retrySave,
+  } = useTimer();
 
   const minutes = Math.floor(Math.max(secondsLeft, 0) / 60);
   const seconds = Math.max(secondsLeft, 0) % 60;
@@ -102,7 +49,13 @@ export default function TimerScreen() {
       </View>
 
       {phase === 'done' ? (
-        <DoneView coins={coinsEarned} onClose={() => router.back()} />
+        <DoneView
+          coins={coinsEarned}
+          onClose={() => {
+            reset();
+            router.back();
+          }}
+        />
       ) : (
         <View style={styles.body}>
           {/* Session type picker — locked once the timer starts */}
@@ -156,7 +109,7 @@ export default function TimerScreen() {
           ) : phase === 'saving' ? (
             <ActivityIndicator color={Colors.primary} style={{ marginTop: Spacing.lg }} />
           ) : phase === 'error' ? (
-            <Pressable style={({ pressed }) => [styles.cta, pressed && { opacity: 0.9 }]} onPress={saveSession}>
+            <Pressable style={({ pressed }) => [styles.cta, pressed && { opacity: 0.9 }]} onPress={retrySave}>
               <Text style={styles.ctaText}>Retry Save</Text>
             </Pressable>
           ) : (
@@ -167,7 +120,7 @@ export default function TimerScreen() {
               </Pressable>
               <Pressable
                 style={({ pressed }) => [styles.cta, { flex: 1 }, pressed && { opacity: 0.9 }]}
-                onPress={() => setPhase(phase === 'running' ? 'paused' : 'running')}
+                onPress={phase === 'running' ? pause : resume}
               >
                 <Text style={styles.ctaText}>{phase === 'running' ? 'Pause' : 'Resume'}</Text>
               </Pressable>

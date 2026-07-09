@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import Svg, { Circle } from 'react-native-svg';
 import { Colors, Shadows, Radii, Spacing } from '@/constants/Colors';
 import { useDashboard } from '@/lib/useDashboard';
+import { useTimer } from '@/lib/TimerContext';
 import { ErrorState } from '@/components/StateViews';
 import type { WeeklyStats } from '@/types/api';
 
@@ -12,6 +13,8 @@ const DAY_KEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 export default function DashboardScreen() {
   const router = useRouter();
   const { student, stats, status, error, retry } = useDashboard();
+  const { phase } = useTimer();
+  const sessionInProgress = phase === 'running' || phase === 'paused';
 
   if (status === 'loading' || !student || !stats) {
     return (
@@ -65,7 +68,7 @@ export default function DashboardScreen() {
           style={({ pressed }) => [styles.cta, pressed && styles.ctaPressed]}
           onPress={() => router.push('/timer')}
         >
-          <Text style={styles.ctaText}>Start Session</Text>
+          <Text style={styles.ctaText}>{sessionInProgress ? 'Back to Session' : 'Start Session'}</Text>
         </Pressable>
       </ScrollView>
     </SafeAreaView>
