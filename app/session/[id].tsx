@@ -71,7 +71,7 @@ export default function SessionDetailScreen() {
   );
 }
 
-/* -------------------- Summary card -------------------- */
+
 
 function SummaryCard({ session }: { session: SessionDetail }) {
   const visual = SESSION_VISUALS[session.type];
@@ -115,7 +115,6 @@ function Stat({ label, value }: { label: string; value: string }) {
   );
 }
 
-/* -------------------- Timeline row -------------------- */
 
 function TimelineRow({ entry }: { entry: TimelineEntry }) {
   const isFocus = entry.type === 'focus';
@@ -142,7 +141,6 @@ function TimelineRow({ entry }: { entry: TimelineEntry }) {
   );
 }
 
-/* -------------------- Styles -------------------- */
 
 const styles = StyleSheet.create({
   container: {
